@@ -29,50 +29,67 @@ document.body.onload = function() {
     		tabRow.appendChild(imgSrc);
     		tabRow.appendChild(imgTags);
             tabRow.appendChild(imgSel);
-            // Firs two rows show img when clicked
+            // First two cells show img when clicked
             tabRow.cells[0].onclick = showImg;
             tabRow.cells[1].onclick = selectUrl;
+
        		document.getElementById("data").appendChild(tabRow);
+
+            // Row to hold image to show
+            var imgCell = document.createElement("td");
+            imgCell.colSpan = 4;
+            var imgHolder = document.createElement("tr");
+            imgHolder.style.textAlign = "center";
+            imgHolder.appendChild(imgCell);
+            imgHolder.style.display = 'none';
+            document.getElementById("data").appendChild(imgHolder);
     	}
     });
 }
 
 function selectUrl () {
     var range = document.createRange();
-                    range.selectNode(this);
-                    window.getSelection().addRange(range);
+    range.selectNode(this);
+    window.getSelection().addRange(range);
 }
 
 function showImg () {
     var row = this.parentElement;
-    // Remove existing image row if there is one
-    if (row.nextSibling && row.nextSibling.cells[0].colSpan == 4) {
-        // delete or hide?
-        data.deleteRow(row.nextSibling.rowIndex);
-        row.style.backgroundColor = "#fff"
+    var imgRow = row.nextSibling;
+    var imgCell = imgRow.childNodes[0];
+    // Hide existing image row if visible
+    if (imgRow.style.display == '') {
+        imgRow.style.display = "none";
+        row.style.backgroundColor = "#fff";
     }
     // Insert the image into the following row
     else {
-        var img = document.createElement("img");
-        var a = document.createElement('a');
-        img.src = row.cells[1].innerText;;
-        img.style.maxHeight = "275px";
-        img.style.maxWidth = "100%";
-        a.href = img.src;
-        a.appendChild(img);
-        var imgCell = document.createElement("td");
-        imgCell.colSpan = 4;
-        var imgHolder = document.createElement("tr");
-        imgHolder.style.textAlign = "center";
-        imgHolder.appendChild(imgCell);
-        imgCell.appendChild(a);
-        data.insertBefore(imgHolder, row.nextSibling);
-        row.style.backgroundColor = "#eef"
-        
-        // Scroll down to have entire img visible
-        if (imgHolder.offsetTop + img.height > main.scrollTop + 300) {
-            main.scrollTop=imgHolder.offsetTop + img.height - 300;
+        if (!imgCell.childNodes[0]){
+            var img = document.createElement("img");
+            var a = document.createElement('a');
+            img.src = row.cells[1].innerText;;
+            img.style.maxHeight = 380;
+            img.style.maxWidth = "100%";
+            a.href = img.src;
+            a.appendChild(img);
+            imgCell.appendChild(a);
+            imgCell.childNodes[0].childNodes[0].onload = scrollToFit;
         }
+        var tableHeight = 400;
+        row.style.backgroundColor = "#eef"
+        imgRow.style.display = '';
+        var imgHeight = imgCell.childNodes[0].childNodes[0].height;
+        if (imgRow.offsetTop + imgHeight > main.scrollTop + tableHeight) {
+                main.scrollTop = imgRow.offsetTop + imgHeight - tableHeight;
+        }
+            // Scroll down to have entire img visible
+    }
+}
+
+function scrollToFit () {
+    var row = this.parentNode.parentNode.parentNode;
+    if (row.offsetTop + this.height > main.scrollTop + 400) {
+            main.scrollTop = row.offsetTop + this.height - 400;
     }
 }
 
@@ -81,23 +98,40 @@ function selectAll () {
     var rows = document.getElementById('data').rows;
     var selAllImgs = this.checked;
     selectedImgs = [];
-    for (var i = 1; i < rows.length; i++) {
-        rows[i].cells[3].childNodes[0].checked = this.checked;
-        if (selAllImgs) {
-            selectedImgs.push(i-1);
+    if (selAllImgs) {
+        for (var i = 1; i < rows.length; i+=2) {
+            if (rows[i].style.display != 'none') {
+                rows[i].cells[3].childNodes[0].checked = true;
+                selectImg(i-1);
+            }
+        }
+    }
+    else {
+        for (var i = 1; i < rows.length; i+=2) {
+            rows[i].cells[3].childNodes[0].checked = false;
+            selectedImgs.splice(i-1, 1);
         }
     }
 }
 
-function clearKlxn() {
+function showGoBut () {
+    var goBut = document.createElement("input");
+    goBut.type = "button";
+    goBut.value = "Go";
+    goBut.id = "go";
+    editTools.appendChild(goBut);
+}
+
+function editKlxn () {
     if (selectedImgs.length == 0) {
         alert("No images have been selected.");
     }
     else {
-    	chrome.storage.local.get("klxn", function(items) {
+        chrome.storage.local.get("klxn", function(items) {
             var klxn =  items.klxn;
             for (var i = selectedImgs.length - 1; i>= 0; i--) {
-                klxn.splice(selectedImgs[i], 1);
+                klxn[selectedImgs[i]/2].desc = newDes.value;
+                klxn[selectedImgs[i]/2].imgTags = newTags.value;
             }
             chrome.storage.local.set({klxn: klxn});
         });
@@ -105,12 +139,36 @@ function clearKlxn() {
     }
 }
 
-function confirmed(message) {
-    return window.confirm(message);
+function addTags () {
+    if (selectedImgs.length == 0) {
+        alert("No images have been selected.");
+    }
+    else {
+        chrome.storage.local.get("klxn", function(items) {
+        var klxn =  items.klxn;
+        for (var i = selectedImgs.length - 1; i>= 0; i--) {
+            klxn[selectedImgs[i]/2].imgTags += ", " + newTagsBox.value;
+        }
+        chrome.storage.local.set({klxn: klxn});
+        });
+        location.reload();
+    }
 }
 
-function editKlxn () {
-
+function deleteSelected() {
+    if (selectedImgs.length == 0) {
+        alert("No images have been selected.");
+    }
+    else {
+    	chrome.storage.local.get("klxn", function(items) {
+            var klxn =  items.klxn;
+            for (var i = selectedImgs.length - 1; i>= 0; i--) {
+                klxn.splice(selectedImgs[i]/2, 1);
+            }
+            chrome.storage.local.set({klxn: klxn});
+        });
+        location.reload();
+    }
 }
 
 // It'll be faster for bigger klxns to keep track of an array of selected
@@ -126,29 +184,77 @@ function selectImg(i) {
 }
 
 function searchImgs () {
-        var rows = document.getElementById('data').rows;
-        for (var i = 1; i < rows.length; i++) {
-            if (rows[i].cells[2].innerText.indexOf(this.value) == -1) {
-                rows[i].style.display = "none";
-                if (selectedImgs.indexOf(i-1) > -1) {
-                    selectImg(i-1);
-                    rows[i].cells[3].childNodes[0].checked = false;
-                }
-            }
-            else {
-                rows[i].style.display = '';
+    var rows = document.getElementById('data').rows;
+    for (var i = 1; i < rows.length; i+=2) {
+        if (rows[i].cells[2].innerText.indexOf(this.value) > -1 ||
+            rows[i].cells[0].innerText.indexOf(this.value) > -1) {
+            rows[i].style.display = '';
+        }
+        else {
+
+            rows[i].style.backgroundColor = '#fff';
+            rows[i].style.display = 'none';
+
+            // The row with the image should be hidden
+            rows[i+1].style.display = 'none';
+            if (selectedImgs.indexOf(i-1) > -1) {
+                selectImg(i-1);
+                rows[i].cells[3].childNodes[0].checked = false;
             }
         }
-    
+    }
 }
 
 var selectedImgs = [];
 
-// clear button
-document.getElementById('clear').addEventListener('click', clearKlxn);
+function hideEdits () {
+    while (editTools.firstChild) {
+        editTools.removeChild(editTools.firstChild);
+    }
+}
 
-// edit button
-document.getElementById('edit').addEventListener('click', editKlxn);
+function showEditBoxes () {
+    var newDes = document.createElement("input");
+    newDes.type = "text";
+    newDes.placeholder= "New description";
+    newDes.id = "newDes";
+    editTools.appendChild(newDes);
+    var newTags = document.createElement("input");
+    newTags.type = "text";
+    newTags.placeholder= "New tags";
+    newTags.style.margin = "0px 2px";
+    newTags.id = "newTags";
+    editTools.appendChild(newTags);
+    showGoBut();
+    document.getElementById('go').addEventListener('click', editKlxn);
+}
+
+function showAddTagBox () {
+    var newTagsBox = document.createElement("input");
+    newTagsBox.type = "text";
+    newTagsBox.placeholder= "Tags to add";
+    newTagsBox.style.marginRight = "2px";
+    newTagsBox.id = "newTagsBox";
+    document.getElementById('editTools').appendChild(newTagsBox);
+    showGoBut();
+    document.getElementById('go').addEventListener('click', addTags);
+}
+
+// option select
+document.getElementById('menu').addEventListener('change', function () {
+            hideEdits();
+    if (menu.selectedIndex == 1) {
+        showEditBoxes();
+    }
+    else if (menu.selectedIndex == 2) {
+        showAddTagBox();
+    }
+    else if (menu.selectedIndex == 3) {
+        showGoBut();
+        go.value = "Remove";
+        document.getElementById('go').addEventListener('click', deleteSelected);
+    }
+});
 
 // search bar
 document.getElementById('search').addEventListener('keyup', searchImgs);
