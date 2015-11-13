@@ -1,6 +1,4 @@
 # Kilxn
-Chrome extension for saving and indexing image URLs
+Chrome extension for saving and indexing image URLs, unpacked, soon to hit the net (like a bad serve)
 
-Search not complete - only compares with entire tags
-
-Edit function to be added soon
+Still in the works, 'tags' feature needs to be adapted for a list nstead

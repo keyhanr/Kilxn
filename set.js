@@ -69,7 +69,11 @@ document.getElementById("klxnDescBox").addEventListener('keydown', function (e) 
     }
 });
 
+<<<<<<< HEAD
 document.getElementById("klxnTagBox").addEventListener('keydown', function (e) {
+=======
+document.getElementById("klxnDescBox").addEventListener('keydown', function (e) {
+>>>>>>> origin/master
     if (e.keyCode == 13) {
         addToKlxn();
     }
@@ -77,8 +81,13 @@ document.getElementById("klxnTagBox").addEventListener('keydown', function (e) {
 
 function addToKlxn () {
     var imag = {src: imgUrl, desc: "", imgTags: ""};
+<<<<<<< HEAD
     imag.desc = klxnDescBox.value;
     imag.imgTags = klxnTagBox.value;
+=======
+    imag.desc = document.getElementById('klxnDescBox').value;
+    imag.imgTags = tagBox.value;
+>>>>>>> origin/master
     closeBox();
     chrome.storage.local.get({klxn: []}, function (result) {
     // the input argument is ALWAYS an object containing the queried keys
