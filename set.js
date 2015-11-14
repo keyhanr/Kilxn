@@ -1,16 +1,21 @@
+if (document.getElementById("addToKilxnBox")) {
+    closeBox();
+}
+
 var dBox = document.createElement("div");
-dBox.id = "setBox";
+dBox.id = "addToKilxnBox";
 
 // Give most defaults values so as to not inherit from document style
 var buttonStyle = "font-family: Segoe UI, Lucida Grande, Tahoma, " +
     "sans-serif; font-size: 12px; padding:1px 3px; margin: 2px; background-" +
-    "color:#fff; color:#000; border-radius:3px; background-size:auto; border: 1px "+
-    "#bbe solid; box-shadow:#aaa 0px -1px 1px inset, #fff 0px 1px 1px inset; line-height: 15px;" + 
-    "box-sizing: border-box; outline:none; onkeypress: 'console.log('h');";
+    "color:#fff; color:#000; border-radius:3px; background-size:auto; "+
+    "box-shadow:#aaa 0px -1px 1px inset, #fff 0px 1px 1px inset; " + 
+    "box-sizing: content-box; outline:none; line-height: 15px; " + 
+    "border: 1px #bbe solid; ";
 
 var inputStyle = "font-family: Segoe UI, Lucida Grande, Tahoma, " +
-    "sans-serif; font-size: 13px; padding:2px; margin: 2px; border:1px #bbb solid;" +
-    "line-height: 15px";
+    "sans-serif; font-size: 13px; padding:2px; margin: 2px;" +
+    "border:1px #bbb solid; line-height: 15px; min-height: 0px;";
 
 dBox.setAttribute("style", "width:150px; height:108px; position:fixed; left:50%; "+
     "top:50%; background:#eee; font-family: Segoe UI, Lucida Grande, Tahoma, " +
@@ -18,7 +23,8 @@ dBox.setAttribute("style", "width:150px; height:108px; position:fixed; left:50%;
     "-left:-78px; margin-top:-75px; padding:3px 6px 0px; line-height:150%;" + 
     "border-radius: 3px; opacity: 100%; text-align:center; box-shadow:" +
     "rgba(0, 0, 0, 0.1) 1px 1px 6px 2px; box-sizing: initial; text-tranform:" +
-    "none; box-sizing: content-box; color:#000;");
+    "none; box-sizing: content-box; color:#000; line-height: 24px; " +
+    "font-style: normal; font-stretch: normal; font-weight: normal;");
 
 dBox.innerHTML += "<center>Add to Kilxn</center>";
 
@@ -91,5 +97,5 @@ function addToKlxn () {
 }
 
 function closeBox () {
-    document.body.removeChild(document.getElementById("setBox"));
+    document.body.removeChild(document.getElementById("addToKilxnBox"));
 }
