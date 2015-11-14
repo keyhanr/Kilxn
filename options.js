@@ -4,46 +4,58 @@ document.body.onload = function() {
 
     chrome.storage.local.get("klxn", function(items) {
         // Load up all the image data into the table
-    	for (imag in items.klxn) {
-            //Make cells
-            var imgDes = document.createElement("td");
-    		var imgSrc = document.createElement("td");
-            imgSrc.setAttribute("style", "direction: rtl; text-align:left;");
-    		var imgTags = document.createElement("td");
-            var imgSel = document.createElement("td");
-            // Fill cells
-            imgDes.innerText = items.klxn[imag].desc;
-    		imgSrc.innerText = items.klxn[imag].src;
-    		imgTags.innerText = items.klxn[imag].imgTags;
+        if (!items.klxn || items.klxn.length == 0) {
+                var msgCell = document.createElement("td");
+                msgCell.colSpan = 4;
+                var msgRow = document.createElement("tr");
+                msgRow.appendChild(msgCell);
+                msgRow.setAttribute('style', "color:#666; text-align:center;")
+                msgCell.innerHTML = "Nothing to see here! <br> Right click images"+
+                " and select 'Kilect this' to add to your Kilxn!";
+                document.getElementById("data").appendChild(msgRow);
+        }
+        else {
+        	for (imag in items.klxn) {
+                //Make cells
+                var imgDes = document.createElement("td");
+        		var imgSrc = document.createElement("td");
+                imgSrc.setAttribute("style", "direction: rtl; text-align:left;");
+        		var imgTags = document.createElement("td");
+                var imgSel = document.createElement("td");
+                // Fill cells
+                imgDes.innerText = items.klxn[imag].desc;
+        		imgSrc.innerText = items.klxn[imag].src;
+        		imgTags.innerText = items.klxn[imag].imgTags;
 
-            // Make checkbox
-            var imgCheck = document.createElement('input');
-            imgCheck.type = "checkbox";
-            imgCheck.onclick = function () {selectImg(this.parentElement
-                .parentElement.rowIndex - 1)};
-            imgSel.appendChild(imgCheck);
+                // Make checkbox
+                var imgCheck = document.createElement('input');
+                imgCheck.type = "checkbox";
+                imgCheck.onclick = function () {selectImg(this.parentElement
+                    .parentElement.rowIndex - 1)};
+                imgSel.appendChild(imgCheck);
 
-            // Make row and add cells to it
-    		var tabRow = document.createElement("tr");
-            tabRow.appendChild(imgDes);
-    		tabRow.appendChild(imgSrc);
-    		tabRow.appendChild(imgTags);
-            tabRow.appendChild(imgSel);
-            // First two cells show img when clicked
-            tabRow.cells[0].onclick = showImg;
-            tabRow.cells[1].onclick = selectUrl;
+                // Make row and add cells to it
+        		var tabRow = document.createElement("tr");
+                tabRow.appendChild(imgDes);
+        		tabRow.appendChild(imgSrc);
+        		tabRow.appendChild(imgTags);
+                tabRow.appendChild(imgSel);
+                // First two cells show img when clicked
+                tabRow.cells[0].onclick = showImg;
+                tabRow.cells[1].onclick = selectUrl;
 
-       		document.getElementById("data").appendChild(tabRow);
+           		document.getElementById("data").appendChild(tabRow);
 
-            // Row to hold image to show
-            var imgCell = document.createElement("td");
-            imgCell.colSpan = 4;
-            var imgHolder = document.createElement("tr");
-            imgHolder.style.textAlign = "center";
-            imgHolder.appendChild(imgCell);
-            imgHolder.style.display = 'none';
-            document.getElementById("data").appendChild(imgHolder);
-    	}
+                // Row to hold image to show
+                var imgCell = document.createElement("td");
+                imgCell.colSpan = 4;
+                var imgHolder = document.createElement("tr");
+                imgHolder.style.textAlign = "center";
+                imgHolder.appendChild(imgCell);
+                imgHolder.style.display = 'none';
+                document.getElementById("data").appendChild(imgHolder);
+        	}
+        }
     });
 }
 
@@ -67,7 +79,7 @@ function showImg () {
         if (!imgCell.childNodes[0]){
             var img = document.createElement("img");
             var a = document.createElement('a');
-            img.src = row.cells[1].innerText;;
+            img.src = row.cells[1].innerText;
             img.style.maxHeight = 380;
             img.style.maxWidth = "100%";
             a.href = img.src;
@@ -78,11 +90,12 @@ function showImg () {
         var tableHeight = 400;
         row.style.backgroundColor = "#eef"
         imgRow.style.display = '';
+
+        // Scroll down to have entire img visible
         var imgHeight = imgCell.childNodes[0].childNodes[0].height;
         if (imgRow.offsetTop + imgHeight > main.scrollTop + tableHeight) {
                 main.scrollTop = imgRow.offsetTop + imgHeight - tableHeight;
         }
-            // Scroll down to have entire img visible
     }
 }
 
@@ -97,7 +110,7 @@ function scrollToFit () {
 function selectAll () {
     var rows = document.getElementById('data').rows;
     var selAllImgs = this.checked;
-    selectedImgs = [];
+    selectedRows = [];
     if (selAllImgs) {
         for (var i = 1; i < rows.length; i+=2) {
             if (rows[i].style.display != 'none') {
@@ -109,12 +122,12 @@ function selectAll () {
     else {
         for (var i = 1; i < rows.length; i+=2) {
             rows[i].cells[3].childNodes[0].checked = false;
-            selectedImgs.splice(i-1, 1);
+            selectedRows.splice(i-1, 1);
         }
     }
 }
 
-function showGoBut () {
+function makeGoBut () {
     var goBut = document.createElement("input");
     goBut.type = "button";
     goBut.value = "Go";
@@ -123,15 +136,15 @@ function showGoBut () {
 }
 
 function editKlxn () {
-    if (selectedImgs.length == 0) {
+    if (selectedRows.length == 0) {
         alert("No images have been selected.");
     }
     else {
         chrome.storage.local.get("klxn", function(items) {
             var klxn =  items.klxn;
-            for (var i = selectedImgs.length - 1; i>= 0; i--) {
-                klxn[selectedImgs[i]/2].desc = newDes.value;
-                klxn[selectedImgs[i]/2].imgTags = newTags.value;
+            for (var i = selectedRows.length - 1; i>= 0; i--) {
+                klxn[selectedRows[i]/2].desc = newDes.value;
+                klxn[selectedRows[i]/2].imgTags = newTags.value;
             }
             chrome.storage.local.set({klxn: klxn});
         });
@@ -140,14 +153,17 @@ function editKlxn () {
 }
 
 function addTags () {
-    if (selectedImgs.length == 0) {
+    if (selectedRows.length == 0) {
         alert("No images have been selected.");
     }
     else {
         chrome.storage.local.get("klxn", function(items) {
         var klxn =  items.klxn;
-        for (var i = selectedImgs.length - 1; i>= 0; i--) {
-            klxn[selectedImgs[i]/2].imgTags += ", " + newTagsBox.value;
+        for (var i = selectedRows.length - 1; i>= 0; i--) {
+            if (klxn[selectedRows[i]/2].imgTags == "") {
+              klxn[selectedRows[i]/2].imgTags += ", ";  
+            }
+            klxn[selectedRows[i]/2].imgTags += newTagsBox.value;
         }
         chrome.storage.local.set({klxn: klxn});
         });
@@ -156,14 +172,14 @@ function addTags () {
 }
 
 function deleteSelected() {
-    if (selectedImgs.length == 0) {
+    if (selectedRows.length == 0) {
         alert("No images have been selected.");
     }
     else {
     	chrome.storage.local.get("klxn", function(items) {
             var klxn =  items.klxn;
-            for (var i = selectedImgs.length - 1; i>= 0; i--) {
-                klxn.splice(selectedImgs[i]/2, 1);
+            for (var i = selectedRows.length - 1; i>= 0; i--) {
+                klxn.splice(selectedRows[i]/2, 1);
             }
             chrome.storage.local.set({klxn: klxn});
         });
@@ -174,12 +190,12 @@ function deleteSelected() {
 // It'll be faster for bigger klxns to keep track of an array of selected
 // rows rather than go through the entire table looking for checked rows
 function selectImg(i) {
-    iInSelectedRows = selectedImgs.indexOf(i);
+    iInSelectedRows = selectedRows.indexOf(i);
     if (iInSelectedRows == -1) {
-        selectedImgs.push(i);
+        selectedRows.push(i);
     }
     else {
-        selectedImgs.splice(iInSelectedRows, 1);
+        selectedRows.splice(iInSelectedRows, 1);
     }
 }
 
@@ -197,7 +213,7 @@ function searchImgs () {
 
             // The row with the image should be hidden
             rows[i+1].style.display = 'none';
-            if (selectedImgs.indexOf(i-1) > -1) {
+            if (selectedRows.indexOf(i-1) > -1) {
                 selectImg(i-1);
                 rows[i].cells[3].childNodes[0].checked = false;
             }
@@ -205,7 +221,7 @@ function searchImgs () {
     }
 }
 
-var selectedImgs = [];
+var selectedRows = [];
 
 function hideEdits () {
     while (editTools.firstChild) {
@@ -225,7 +241,7 @@ function showEditBoxes () {
     newTags.style.margin = "0px 2px";
     newTags.id = "newTags";
     editTools.appendChild(newTags);
-    showGoBut();
+    makeGoBut();
     document.getElementById('go').addEventListener('click', editKlxn);
 }
 
@@ -236,7 +252,7 @@ function showAddTagBox () {
     newTagsBox.style.marginRight = "2px";
     newTagsBox.id = "newTagsBox";
     document.getElementById('editTools').appendChild(newTagsBox);
-    showGoBut();
+    makeGoBut();
     document.getElementById('go').addEventListener('click', addTags);
 }
 
@@ -250,7 +266,7 @@ document.getElementById('menu').addEventListener('change', function () {
         showAddTagBox();
     }
     else if (menu.selectedIndex == 3) {
-        showGoBut();
+        makeGoBut();
         go.value = "Remove";
         document.getElementById('go').addEventListener('click', deleteSelected);
     }
