@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
 
-  "name": "Kilxns",
-  "description": "Collect image URLS as you browse for later.",
+  "name": "Kilxn",
+  "description": "Collect image URLs as you browse for later.",
   "version": "1.0",
 
   "browser_action": {
@@ -20,7 +20,10 @@
     "activeTab"
   ],
   "icons": {
-    "16" : "icon-bitty.png"
+    "16" : "icon16.png",
+    "19" : "icon.png",
+    "48" : "icon48.png",
+    "128" : "icon128.png"
   },
   "options_page": "options.html"
 }
