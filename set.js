@@ -5,7 +5,7 @@ dBox.id = "setBox";
 var buttonStyle = "font-family: Segoe UI, Lucida Grande, Tahoma, " +
     "sans-serif; font-size: 12px; padding:1px 3px; margin: 2px; background-" +
     "color:#fff; color:#000; border-radius:3px; background-size:auto; border: 1px "+
-    "#bbe solid; box-shadow:#ccc 0px -1px 1px inset; line-height: 15px;" + 
+    "#bbe solid; box-shadow:#aaa 0px -1px 1px inset, #fff 0px 1px 1px inset; line-height: 15px;" + 
     "box-sizing: border-box; outline:none; onkeypress: 'console.log('h');";
 
 var inputStyle = "font-family: Segoe UI, Lucida Grande, Tahoma, " +
@@ -18,7 +18,7 @@ dBox.setAttribute("style", "width:150px; height:108px; position:fixed; left:50%;
     "-left:-78px; margin-top:-75px; padding:3px 6px 0px; line-height:150%;" + 
     "border-radius: 3px; opacity: 100%; text-align:center; box-shadow:" +
     "rgba(0, 0, 0, 0.1) 1px 1px 6px 2px; box-sizing: initial; text-tranform:" +
-    "none; box-sizing: content-box; ");
+    "none; box-sizing: content-box; color:#000;");
 
 dBox.innerHTML += "<center>Add to Kilxn</center>";
 
@@ -84,7 +84,7 @@ function addToKlxn () {
     // the input argument is ALWAYS an object containing the queried keys
     // so we select the key we need
     var klxn = result.klxn;
-    klxn.push(imag);
+    klxn.unshift(imag);
     // set the new array value to the same key
     chrome.storage.local.set({klxn: klxn}, function () {});
   });
