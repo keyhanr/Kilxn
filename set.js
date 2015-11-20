@@ -15,16 +15,19 @@ var buttonStyle = "font-family: Segoe UI, Lucida Grande, Tahoma, " +
 
 var inputStyle = "font-family: Segoe UI, Lucida Grande, Tahoma, " +
     "sans-serif; font-size: 13px; padding:2px; margin: 2px;" +
-    "border:1px #bbb solid; line-height: 15px; min-height: 0px;";
+    "border:1px #bbb solid; line-height:15px; min-height:0px; max-width:146px; " +
+    "height:18px; border-radius:0px; background-color: #fff; color:#000;"+
+    "max-height:18px; box-sizing: content-box";
 
 dBox.setAttribute("style", "width:150px; height:108px; position:fixed; left:50%; "+
     "top:50%; background:#eee; font-family: Segoe UI, Lucida Grande, Tahoma, " +
-    "sans-serif; font-size: 16px; border:1px solid #ccc; z-index:999; margin" +
+    "sans-serif; font-size: 16px; border:1px solid #ccc; z-index:99999; margin" +
     "-left:-78px; margin-top:-75px; padding:3px 6px 0px; line-height:150%;" + 
     "border-radius: 3px; opacity: 100%; text-align:center; box-shadow:" +
     "rgba(0, 0, 0, 0.1) 1px 1px 6px 2px; box-sizing: initial; text-tranform:" +
     "none; box-sizing: content-box; color:#000; line-height: 24px; " +
-    "font-style: normal; font-stretch: normal; font-weight: normal;");
+    "font-style: normal; font-stretch: normal; font-weight: normal; min-height:" +
+    "108px; text-tranform:none;");
 
 dBox.innerHTML += "<center>Add to Kilxn</center>";
 
