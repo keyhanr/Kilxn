@@ -26,7 +26,7 @@
       white-space: nowrap;
       border: 1px solid #bbb;
       font-size: 14px;
-      padding: 0px;
+      padding: 0 4px;
     }
     table {
       width: 100%;
@@ -75,7 +75,7 @@
       min-width: 470px;
       margin: 10px auto;
     }
-    #search {
+    #searchDiv {
       float: right;
     }
     #menu {
@@ -97,7 +97,10 @@
           <option value="addTags">Add tags to selected</option>
           <option value="delete">Delete selected</option>
         </select>
-        <input type="text" placeholder="Search" id="search">
+        <div id="searchDiv">
+          Include URLs: <input type="checkbox" checked="true" id="incUrls">
+          <input type="text" placeholder="Search" id="search">
+        </div>
         <script src="options.js"></script>
       </div>
       <div id="editTools"></div>
