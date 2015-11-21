@@ -40,10 +40,11 @@ document.body.onload = function() {
         		tabRow.appendChild(imgSrc);
         		tabRow.appendChild(imgTags);
                 tabRow.appendChild(imgSel);
-                // First two cells show img when clicked
+                // Description shows img when clicked, clicking URL selects it
                 tabRow.cells[0].onclick = showImg;
                 tabRow.cells[1].onclick = selectUrl;
 
+                // Add row to table
            		document.getElementById("data").appendChild(tabRow);
 
                 // Row to hold image to show
@@ -106,7 +107,7 @@ function scrollToFit () {
     }
 }
 
-// Go through every row in table (save for first) and add/remove all from selected
+// Go through every row in table (save for titles) and add/remove all from selected
 function selectAll () {
     var rows = document.getElementById('data').rows;
     var selAllImgs = this.checked;
@@ -199,29 +200,61 @@ function selectImg(i) {
     }
 }
 
+// Hear me out for this one. Much more code, but during runtime far 
+// fewer comparisons need be made.
 function searchImgs () {
     var rows = document.getElementById('data').rows;
-    for (var i = 1; i < rows.length; i+=2) {
-        if (rows[i].cells[2].innerText.indexOf(this.value) > -1 ||
-            rows[i].cells[0].innerText.indexOf(this.value) > -1) {
-            rows[i].style.display = '';
+    if (this.value == "") {
+        incUrls.disabled="";
+    }
+    else {
+        incUrls.disabled = "disabled";
+    }
+    // If URLs are to be included in the search
+    if (searchUrls) {
+        for (var i = 1; i < rows.length; i+=2) {
+            // Make all rows that match criteria visible
+            if (rows[i].cells[2].innerText.indexOf(this.value) > -1 ||
+                rows[i].cells[1].innerText.indexOf(this.value) > -1 ||
+                rows[i].cells[0].innerText.indexOf(this.value) > -1) {
+                rows[i].style.display = '';
+            }
+            // Otherwise hide the row, deselecting it
+            else {
+                rows[i].style.backgroundColor = '#fff';
+                rows[i].style.display = 'none';
+
+                // The row with the image should be hidden
+                rows[i+1].style.display = 'none';
+                if (selectedRows.indexOf(i-1) > -1) {
+                    selectImg(i-1);
+                    rows[i].cells[3].childNodes[0].checked = false;
+                }
+            }
         }
-        else {
+    }
+    else {
+        for (var i = 1; i < rows.length; i+=2) {
+            // Make all rows that match criteria visible
+            if (rows[i].cells[2].innerText.indexOf(this.value) > -1 ||
+                rows[i].cells[0].innerText.indexOf(this.value) > -1) {
+                rows[i].style.display = '';
+            }
+            // Otherwise hide the row, deselecting it
+            else {
+                rows[i].style.backgroundColor = '#fff';
+                rows[i].style.display = 'none';
 
-            rows[i].style.backgroundColor = '#fff';
-            rows[i].style.display = 'none';
-
-            // The row with the image should be hidden
-            rows[i+1].style.display = 'none';
-            if (selectedRows.indexOf(i-1) > -1) {
-                selectImg(i-1);
-                rows[i].cells[3].childNodes[0].checked = false;
+                // The row with the image should be hidden
+                rows[i+1].style.display = 'none';
+                if (selectedRows.indexOf(i-1) > -1) {
+                    selectImg(i-1);
+                    rows[i].cells[3].childNodes[0].checked = false;
+                }
             }
         }
     }
 }
-
-var selectedRows = [];
 
 function hideEdits () {
     while (editTools.firstChild) {
@@ -271,6 +304,14 @@ document.getElementById('menu').addEventListener('change', function () {
         document.getElementById('go').addEventListener('click', deleteSelected);
     }
 });
+
+document.getElementById('incUrls').addEventListener('change', function () {
+    searchUrls = incUrls.checked;
+});
+
+var selectedRows = [];
+
+var searchUrls = true;
 
 // search bar
 document.getElementById('search').addEventListener('keyup', searchImgs);
