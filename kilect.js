@@ -1,3 +1,7 @@
+var id = chrome.contextMenus.create({id: "addGifv", title: 
+  "Kilect this...", contexts:["video"],
+  targetUrlPatterns:["*://*/*.gifv", "*://*/*.webm"]});
+
 var id = chrome.contextMenus.create({id: "add", title: 
   "Kilect this", contexts:["image"]});
 // Set fields
