@@ -78,7 +78,21 @@ function showImg () {
     // Insert the image into the following row
     else {
         if (!imgCell.childNodes[0]){
-            var img = document.createElement("img");
+            imgSrc = row.cells[1].innerText;
+            if (endsWith(imgSrc, ".gifv")){
+                imgSrc = imgSrc.substring(0, imgSrc.length - 4) + "webm";
+            }
+            if (endsWith(imgSrc, ".webm")){
+                var img = document.createElement("video");
+                type="video/webm";
+                img.autoplay = true;
+                img.loop = true;
+                img.addEventListener('mouseover', function() { this.controls = true; }, false);
+                img.addEventListener('mouseout', function() { this.controls = false; }, false);
+            }
+            else {
+                var img = document.createElement("img");
+            }
             var a = document.createElement('a');
             img.src = row.cells[1].innerText;
             img.style.maxHeight = 380;
