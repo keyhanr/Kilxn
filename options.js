@@ -60,6 +60,10 @@ document.body.onload = function() {
     });
 }
 
+function endsWith(str, suffix) {
+    return str.indexOf(suffix, str.length - suffix.length) !== -1;
+}
+
 function selectUrl () {
     var range = document.createRange();
     range.selectNode(this);
@@ -87,8 +91,10 @@ function showImg () {
                 type="video/webm";
                 img.autoplay = true;
                 img.loop = true;
-                img.addEventListener('mouseover', function() { this.controls = true; }, false);
-                img.addEventListener('mouseout', function() { this.controls = false; }, false);
+                img.addEventListener('mouseover', function() {
+                    this.controls = true; }, false);
+                img.addEventListener('mouseout', function() {
+                    this.controls = false; }, false);
             }
             else {
                 var img = document.createElement("img");
