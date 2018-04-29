@@ -1,0 +1,38 @@
+<html>
+  <head>
+    <base target="_blank">
+  	<title>Kilxn</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css">
+  </head>
+  <body>
+    <div id="header">
+      <h1><a href="options.html">Kilxn</a></h1>
+    </div>
+    <div id="wrapper">
+      <div id="options">
+        <select id="menu">
+          <option value="">Options</option>
+          <option value="edit">Edit selected</option>
+          <option value="addTags">Add tags to selected</option>
+          <option value="delete">Delete selected</option>
+        </select>
+        <div id="searchDiv">
+          Include URLs: <input type="checkbox" checked="true" id="incUrls">
+          <input type="text" placeholder="Search" id="search">
+        </div>
+        <script src="../js/options.js"></script>
+      </div>
+      <div id="editTools"></div>
+      <div id="main">
+        <table id="data">
+          <tr>
+            <th width="40%">Description</th>
+            <th width="40%">URL</th>
+            <th width="20%">Tags</th>
+            <th><input id="sAll" type="checkbox"></th>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

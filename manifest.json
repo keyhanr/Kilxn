@@ -2,28 +2,28 @@
   "manifest_version": 2,
 
   "name": "Kilxn",
-  "description": "Collect image URLs as you browse for later.",
-  "version": "1.0",
+  "description": "Kilect image URLs as you browse for later use!",
+  "version": "1.0.1.0",
 
   "browser_action": {
-    "default_icon": "icon.png",
-    "default_popup": "options.html"
+    "default_icon": "img/icon.png",
+    "default_popup": "html/options.html"
   },
   "background": {
-    "scripts": ["kilect.js"],
-    "matches": ["https://*", "http://*"]
+    "scripts": ["js/kilect.js"],
+    "matches": ["http*"],
+    "exclude_globs": ["*://chrome.google.com/webstore/*"]
   },
   "permissions": [
     "contextMenus",
-    "tabs",
     "storage",
     "activeTab"
   ],
   "icons": {
-    "16" : "icon16.png",
-    "19" : "icon.png",
-    "48" : "icon48.png",
-    "128" : "icon128.png"
+    "16" : "img/icon16.png",
+    "19" : "img/icon.png",
+    "48" : "img/icon48.png",
+    "128" : "img/icon128.png"
   },
-  "options_page": "options.html"
+  "options_page": "html/options.html"
 }
