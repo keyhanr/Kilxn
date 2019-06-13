@@ -3,7 +3,7 @@
 
   "name": "Kilxn",
   "description": "Kilect image URLs as you browse for later use!",
-  "version": "1.0.1.0",
+  "version": "1.0.1.1",
 
   "browser_action": {
     "default_icon": "img/icon.png",
