@@ -34,9 +34,11 @@ function displayDialogBox(){
 
 // When the "Add" button is clicked
 function addToKilxn () {
-    var imag = {src: imgUrl, desc: "", imgTags: ""};
-    imag.desc = kilxnDescriptionField.value;
-    imag.imgTags = kilxnTagsField.value;
+    var imag = {
+        src: imgUrl, 
+        desc: kilxnDescriptionField.value, 
+        imgTags: kilxnTagsField.value
+    };
     closeBox();
     // Get the existing kilxn from storage, an empty array if it doesn't exist
     // then add the new image to it
